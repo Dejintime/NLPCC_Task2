@@ -7,36 +7,34 @@
 - **输入格式**：`Scenario [SEP] Question [SEP] Consistent Value Response`
 - **类别不均衡**：最少 68 条（Universalism–tolerance），最多 400 条（Stimulation），极差约 6 倍
 
-| 类别                   | 训练集 | 类别                      | 训练集 |
-| ---------------------- | ------ | ------------------------- | ------ |
-| Self-direction–thought | 119    | Tradition                 | 90     |
-| Self-direction–action  | 124    | Conformity–rules          | 385    |
-| Stimulation            | 400    | Conformity–interpersonal  | 236    |
-| Hedonism               | 164    | Humility                  | 100    |
-| Achievement            | 174    | Benevolence–dependability | 189    |
-| Power–dominance        | 156    | Benevolence–caring        | 317    |
-| Power–resources        | 237    | Universalism–concern      | 160    |
-| Face                   | 258    | Universalism–nature       | 71     |
-| Security–personal      | 202    | Universalism–tolerance    | 68     |
-| Security–societal      | 70     |                           |        |
+| 类别 | 训练集 | 类别 | 训练集 |
+|------|--------|------|--------|
+| Self-direction–thought | 119 | Tradition | 90 |
+| Self-direction–action | 124 | Conformity–rules | 385 |
+| Stimulation | 400 | Conformity–interpersonal | 236 |
+| Hedonism | 164 | Humility | 100 |
+| Achievement | 174 | Benevolence–dependability | 189 |
+| Power–dominance | 156 | Benevolence–caring | 317 |
+| Power–resources | 237 | Universalism–concern | 160 |
+| Face | 258 | Universalism–nature | 71 |
+| Security–personal | 202 | Universalism–tolerance | 68 |
+| Security–societal | 70 | | |
 
-## Track 1 
-
+## Track 1
 ### Track 1实验总览
 
-| Exp  | 类型    | 模型              | 框架                             | Context                          | LR   | Epochs | Batch        | Max Len | LoRA r/α | Dev Accuracy | Dev Macro F1 | 备注                                              |
-| ---- | ------- | ----------------- | -------------------------------- | -------------------------------- | ---- | ------ | ------------ | ------- | -------- | ------------ | ------------ | ------------------------------------------------- |
-| 01   | Encoder | deberta-v3-large  | Unsloth + WeightedTrainer        | Scenario + Question + Response   | 5e-5 | 15     | 16           | 512     | 16/32    | **91.63%**   | **0.9027**   | 使用类别加权交叉熵，缓解类别不均衡                |
-| 02   | Encoder | bert-base-uncased | Transformers + R-Drop            | Scenario + Question + Response   | 5e-5 | 5      | 4            | 512     | -        | **93.39%**   | **0.9225**   | 双前向一致性正则，当前最优                        |
-| 03   | Encoder | bert-base-uncased | Transformers + Weighted CE + SCL | Scenario + Question + Response   | 5e-5 | 5      | 64 × 2 accum | 512     | -        | **92.80%**   | **0.9169**   | 类别加权交叉熵结合监督对比学习，优化后接近 R-Drop |
-| E0   | Decoder | qwen3-4B          | Unsloth SFT                      | response_only                    | 1e-5 | 4      | 8            | 1024    | 16/32    | **88.13%**   | **0.8576**   | 训练/推理都只用 `Consistent Value Response`       |
-| E1   | Decoder | qwen3-4B          | Unsloth SFT                      | full_context -> response_only    | 1e-5 | 3      | 8            | 1024    | 16/32    | **84.82%**   | **0.8187**   | 训练用全上下文，验证严格使用 response_only        |
-| E2   | Decoder | qwen3-4B          | Unsloth SFT                      | context_dropout -> response_only | 1e-5 | 3      | 8            | 1024    | 16/32    | **85.99%**   | **0.8345**   | 随机上下文 dropout 训练，当前最新实验             |
+| Exp | 类型 | 模型 | 框架 | Context | LR | Epochs | Batch | Max Len | LoRA r/α | Dev Accuracy | Dev Macro F1 | 备注 |
+|-----|------|------|------|---------|-----|--------|------|---------|-------------|-------------|-------------|------|
+| 01 | Encoder | deberta-v3-large | Unsloth + WeightedTrainer | Scenario + Question + Response | 5e-5 | 15 | 16 | 512 | 16/32 | **91.63%** | **0.9027** | 使用类别加权交叉熵，缓解类别不均衡 |
+| 02 | Encoder | bert-base-uncased | Transformers + R-Drop | Scenario + Question + Response | 5e-5 | 5 | 4 | 512 | - | **93.39%** | **0.9225** | 双前向一致性正则，当前最优 |
+| 03 | Encoder | bert-base-uncased | Transformers + Weighted CE + SCL | Scenario + Question + Response | 5e-5 | 5 | 64 × 2 accum | 512 | - | **92.80%** | **0.9169** | 类别加权交叉熵结合监督对比学习，优化后接近 R-Drop |
+| E0 | Decoder | qwen3-4B | Unsloth SFT | response_only | 1e-5 | 4 | 8 | 1024 | 16/32 | **88.13%** | **0.8576** | 训练/推理都只用 `Consistent Value Response` |
+| E1 | Decoder | qwen3-4B | Unsloth SFT | full_context -> response_only | 1e-5 | 3 | 8 | 1024 | 16/32 | **84.82%** | **0.8187** | 训练用全上下文，验证严格使用 response_only |
+| E2 | Decoder | qwen3-4B | Unsloth SFT | context_dropout -> response_only | 1e-5 | 3 | 8 | 1024 | 16/32 | **85.99%** | **0.8345** | 随机上下文 dropout 训练，当前最新实验 |
 
 Decoder 三组实验都基于 `unsloth/Qwen3-4B` + 4bit LoRA，推理阶段统一走官方 Track 1 的 `response_only` 形式。
 
 ### 技术路线
-
 #### Encoder 分类（DeBERTa-v3-large + LoRA）
 
 1. **数据构造** — 将 `Scenario`、`Question`、`Consistent Value Response` 用 ` [SEP] ` 拼接为单条文本，映射 19 类标签为分类 ID。
@@ -98,41 +96,41 @@ $$
 `match_rate` 表示生成回答被 Track1 分类器判定为目标 `Value` 的比例：
 
 $$
-\text{match\_rate}
+\mathrm{match\_rate}
 = \frac{1}{N}\sum_{i=1}^{N} \mathbf{1}[\hat{y}_i = y_i]
 $$
 
 `avg_target_prob` 表示 Track1 分类器分配给真实目标 `Value` 的平均概率：
 
 $$
-\text{avg\_target\_prob}
+\mathrm{avg\_target\_prob}
 = \frac{1}{N}\sum_{i=1}^{N} p_i(y_i)
 $$
 
 `avg_margin` 表示目标 `Value` 概率与最强非目标类别概率之间的平均差值：
 
 $$
-\text{avg\_margin}
+\mathrm{avg\_margin}
 = \frac{1}{N}\sum_{i=1}^{N}
 \left(
 p_i(y_i) - \max_{c \ne y_i} p_i(c)
 \right)
 $$
 
-`avg_word_count` 表示最终选中生成回答的平均词数。设最终回答文本为 $r_i$，词数为 $\text{len}(\text{split}(r_i))$：
+`avg_word_count` 表示最终选中生成回答的平均词数。设最终回答文本为 $r_i$，词数为 $\mathrm{word\_count}(r_i)$：
 
 $$
-\text{avg\_word\_count}
+\mathrm{avg\_word\_count}
 = \frac{1}{N}\sum_{i=1}^{N}
-\text{word\_count}(r_i)
+\mathrm{word\_count}(r_i)
 $$
 
 ### 实验总览
 
-| experiment  |    n | track1_match_rate | avg_target_prob | avg_margin |
-| ----------- | ---: | ----------------: | --------------: | ---------: |
-| dpo_sample4 |  514 |            0.9844 |          0.9679 |     0.9528 |
-| sft_sample4 |  514 |            0.9844 |          0.9659 |     0.9488 |
+| experiment  |    n | track1_match_rate | avg_target_prob | avg_margin | avg_word_count | avg_num_candidates |
+| ----------- | ---: | ----------------: | --------------: | ---------: | -------------: | -----------------: |
+| dpo_sample4 |  514 |            0.9844 |          0.9679 |     0.9528 |        27.4144 |             3.9494 |
+| sft_sample4 |  514 |            0.9844 |          0.9659 |     0.9488 |        23.4961 |             3.9981 |
 
 ## 1. SFT
 
@@ -223,7 +221,7 @@ FP16 = False
 
 ## 2.DPO
 
-### 2.1数据输入格式
+### 2.1 数据输入格式
 
 prompt + chosen + rejected
 
@@ -319,9 +317,7 @@ $$
 
 ## 3. Generated Response 对比
 
-下面从dev集生成结果中，为每个 `Value` 抽取一条样本，对比原始回答、SFT生成回答和DPO生成回答。
-
-下面沿用刚才随机抽到的 10 条样本，格式改成非表格，并加入原始回答与我给的主观评分。
+下面从 dev 集生成结果中随机抽取 10 条样本，对比原始回答、SFT 生成回答和 DPO 生成回答，并给出主观评分。
 
 **Universalism–nature（idx=259）**
 
@@ -385,7 +381,7 @@ $$
 - 问题：How would you handle the speaker's discomfort during the rehearsal?
 - 原始回答：I would help them quietly and respectfully during rehearsal, offering encouragement and practical support so they can regain confidence without feeling embarrassed.
 - SFT回答（评分：9/10，理由：很好地体现了维护对方面子、私下支持和帮助恢复自信）：I would discreetly guide the speaker through their lines with supportive encouragement, ensuring they regain confidence and maintain a polished public image.
-- DPO回答（评分：6/10，理由：前半部分贴合 Face 价值，但末尾混入了 prompt 残留内容，生成质量明显受损）：I would discreetly guide them to recover gracefully, offer supportive cues to restore their confidence, and ensure the presentation proceeds without drawing attention to their mistake, thus protecting their public image.user You are given a scenario, a question, and a target human value. Generate one concise, meaningful response that answers the question, fits the scenario, and naturally aligns with the target value.
+- DPO回答（评分：9/10，理由：能体现私下协助、避免公开尴尬和维护公共形象，较好贴合 Face 价值）：I would discreetly guide them to recover gracefully, offer supportive cues to restore their confidence, and ensure the presentation proceeds without drawing attention to their mistake, thus protecting their public image.
 
 **Power–dominance（idx=279）**
 
