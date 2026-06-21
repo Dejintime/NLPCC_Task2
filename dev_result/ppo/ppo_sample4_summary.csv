@@ -1,0 +1,2 @@
+experiment,n,track1_match_rate,avg_target_prob,avg_margin,avg_word_count,avg_num_candidates
+ppo_sample4,514,0.9572,0.951,0.9101,26.0681,3.714

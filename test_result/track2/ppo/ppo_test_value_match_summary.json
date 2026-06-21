@@ -1,0 +1,13 @@
+{
+  "model": "qwen35_9b_ppo",
+  "model_mode": "ppo",
+  "model_dir": "outputs/track2/qwen35_9b/ppo",
+  "reranker": "track1_deberta_v2_xxlarge_moco_scl",
+  "n": 514,
+  "avg_num_candidates": 4.0,
+  "track1_match_count": 498,
+  "track1_mismatch_count": 16,
+  "track1_match_rate": 0.9688715953307393,
+  "avg_target_prob": 0.9670984751369449,
+  "avg_margin": 0.9396166071179776
+}

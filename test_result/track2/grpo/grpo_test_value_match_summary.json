@@ -1,0 +1,13 @@
+{
+  "model": "qwen35_9b_grpo",
+  "model_mode": "grpo",
+  "model_dir": "outputs/track2/qwen35_9b/grpo",
+  "reranker": "track1_deberta_v2_xxlarge_moco_scl",
+  "n": 514,
+  "avg_num_candidates": 4.0,
+  "track1_match_count": 514,
+  "track1_mismatch_count": 0,
+  "track1_match_rate": 1.0,
+  "avg_target_prob": 0.9983732851098948,
+  "avg_margin": 0.9970579726570775
+}

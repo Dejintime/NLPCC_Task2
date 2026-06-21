@@ -1,0 +1,1 @@
+We used the official NLPCC 2026 Shared Task 2 train.jsonl and dev.jsonl for supervised training and validation. No additional supervised or unsupervised external data was used.

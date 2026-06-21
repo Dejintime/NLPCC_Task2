@@ -5,3 +5,4 @@ __pycache__/
 .ipynb_checkpoints/
 outputs/
 track1/encoder/unsloth_compiled_cache/
+test_result/

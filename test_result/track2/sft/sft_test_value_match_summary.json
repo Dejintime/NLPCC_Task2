@@ -1,0 +1,13 @@
+{
+  "model": "qwen35_9b_sft",
+  "model_mode": "sft",
+  "model_dir": "outputs/track2/qwen35_9b/sft",
+  "reranker": "track1_deberta_v2_xxlarge_moco_scl",
+  "n": 514,
+  "avg_num_candidates": 4.0,
+  "track1_match_count": 504,
+  "track1_mismatch_count": 10,
+  "track1_match_rate": 0.980544747081712,
+  "avg_target_prob": 0.9772432075188106,
+  "avg_margin": 0.9569782280156585
+}
